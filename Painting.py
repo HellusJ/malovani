@@ -12,8 +12,8 @@ root.minsize(750, 500)
 root.maxsize(750, 500)
 
 #vlozeni platna
-platno = tk.Canvas(root,width=750,height=450,bg="lightgrey")
-platno.grid(row=1, columnspan=10, padx=3, pady=3)
+platno = tk.Canvas(root,width=750,height=500,bg="lightgrey")
+platno.grid(row=1, columnspan=8)
 
 #barva
 barva_button = tk.Button(root, text="Barva", command=vyber_barvu, width=10)
@@ -35,5 +35,9 @@ def smaz_platno():
 
 button_smaz = tk.Button(root,text="smazat", command=smaz_platno)
 button_smaz.grid(row=0, column=3, padx=3, pady=3)
+
+root.mainloop()
+button_smaz.grid(row=0, column=3, padx=3, pady=3)
+
 
 root.mainloop()
