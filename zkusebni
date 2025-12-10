@@ -1,0 +1,54 @@
+# import tkinter as tk
+# import random as rd 
+
+# hl_okno = tk.Tk()
+# hl_okno.minsize(700,700)
+
+# #vlozeni platna
+# platno = tk.Canvas(hl_okno,width=500,height=500,bg="grey")
+# platno.pack()
+
+# #obdelnik
+# platno.create_rectangle(50,50,100,100,fill="blue",outline="black")
+
+# #kruhy
+# for i in range(5):
+#     platno.create_oval(50+i*30,150,80+i*30,180)
+
+# #QR kod
+# for i in range(250):
+#     x = rd.randint(1,21)*10+25
+#     y = rd.randint(1,21)*10+210
+#     platno.create_rectangle(x,y,x+10,y+10,fill="black")
+
+# #GPS
+# for _ in range(200):
+#     x = rd.randint(20,300)
+#     y = rd.randint(20,300)
+#     platno.create_text(x,y,text="+")
+#     platno.create_text(x,y+10,text=f"[{x},{y}]")
+
+# #kreslení myší
+# def klik_maluj(mys):
+#     platno.create_text(mys.x,mys.y,text="●")
+    
+# platno.bind("<B1-Motion>",klik_maluj)
+
+# def smaz_platno():
+#     platno.delete("all")
+
+# button_smaz = tk.Button(hl_okno,text="smazat", command=smaz_platno)
+# button_smaz.pack()
+
+# #animace
+
+# def move_ball():
+#     platno.move(ball,2,1)
+#     hl_okno.after(20, move_ball)
+
+# #kreslení koule
+# ball = platno.create_oval(50,50,100,100, fill="pink")
+
+# move_ball()
+
+# hl_okno.mainloop()
