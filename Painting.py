@@ -28,7 +28,7 @@ velikost_spinbox = tk.Spinbox(root, from_=4, to=200, width=5)
 velikost_spinbox.grid(row=0, column=1, padx=3, pady=3)
 
 # moznosti
-styl_podtrzeni = ["tužka","sprej","obdelník","kruh", "guma"]
+styl_podtrzeni = ["tužka","sprej","obdelník","oval", "guma"]
 vybrany_styl_podtrzeni = tk.StringVar(value=styl_podtrzeni[0])
 styl_optionmenu = tk.OptionMenu(root, vybrany_styl_podtrzeni, *styl_podtrzeni)
 styl_optionmenu.grid(row=0, column=2, padx=3, pady=3)
@@ -37,6 +37,15 @@ styl_optionmenu.grid(row=0, column=2, padx=3, pady=3)
 posledni_x = None
 posledni_y = None
 
+#obdelnik
+obdelnik_start_x = None
+obdelnik_start_y = None
+
+#oval
+kruh_start_x = None
+kruh_start_y = None
+
+#kresleni
 def zacni_kreslit(mys):
     global posledni_x, posledni_y
     posledni_x = mys.x
@@ -51,31 +60,7 @@ def kresli(mys):
         return 0
 
     platno.create_line(posledni_x, posledni_y, mys.x, mys.y,fill=hex, smooth=True, capstyle="round",width=int(velikost_spinbox.get()))
-    posledni_x = mys.x
-    posledni_y = mys.y
-
-def sprej(mys):
-    hustota = 10
-    r=1
-    for i in range(hustota):
-        dx = rd.randint(-20, 20)
-        dy = rd.randint(-20, 20)
-
-        x = mys.x + dx
-        y = mys.y + dy
-
-        platno.create_oval(x - r, y - r, x + r, y + r, fill=hex, outline="")
-
-def guma(mys):
-    global posledni_x, posledni_y
-
-    if posledni_x is None or posledni_y is None:
-        posledni_x = mys.x
-        posledni_y = mys.y
-        return 0
-
-    platno.create_line(posledni_x, posledni_y, mys.x, mys.y,fill="lightgrey", smooth=True, capstyle="round",width=int(velikost_spinbox.get()))
-    posledni_x = mys.x
+    posledni_x = mys.x 
     posledni_y = mys.y
 
 def stop_kresleni(*args):
@@ -83,11 +68,58 @@ def stop_kresleni(*args):
     posledni_x = None
     posledni_y = None
 
-def aktualizuj_bind(*args): 
-    platno.unbind("<Button-1>")
-    platno.unbind("<B1-Motion>")
-    platno.unbind("<ButtonRelease-1>")
+#sprej
+def sprej(mys):
+    r=1
+    rozsah = int(velikost_spinbox.get())
+    hustota = rozsah // 3
 
+    for i in range(hustota):
+        dx = rd.randint(-rozsah,rozsah)
+        dy = rd.randint(-rozsah,rozsah)
+
+        x = mys.x + dx
+        y = mys.y + dy
+
+        platno.create_oval(x - r, y - r, x + r, y + r, fill=hex, outline="")
+
+#guma
+def guma(mys):
+    global posledni_x, posledni_y
+
+    if posledni_x is None or posledni_y is None:
+        posledni_x = mys.x
+        posledni_y = mys.y
+
+    platno.create_line(posledni_x, posledni_y, mys.x, mys.y,fill="lightgrey", smooth=True, capstyle="round",width=int(velikost_spinbox.get()))
+    posledni_x = mys.x
+    posledni_y = mys.y
+
+#obdelnik
+def obdelnik_klik(mys):
+    global obdelnik_start_x, obdelnik_start_y
+
+    if obdelnik_start_x is None and obdelnik_start_y is None:
+        obdelnik_start_x = mys.x
+        obdelnik_start_y = mys.y 
+    else:
+        platno.create_rectangle(obdelnik_start_x, obdelnik_start_y,mys.x, mys.y,outline=hex,width=int(velikost_spinbox.get()))
+        obdelnik_start_x = None
+        obdelnik_start_y = None
+
+#oval
+def oval_klik(mys):
+    global kruh_start_x, kruh_start_y
+
+    if kruh_start_x is None and kruh_start_y is None:
+        kruh_start_x = mys.x
+        kruh_start_y = mys.y
+    else:
+        platno.create_oval(kruh_start_x, kruh_start_y,mys.x, mys.y,outline=hex,width=int(velikost_spinbox.get()))
+        kruh_start_x = None
+        kruh_start_y = None
+
+def aktualizuj_bind(*args): 
     styl = vybrany_styl_podtrzeni.get()
 
     if styl == "tužka":
@@ -104,6 +136,12 @@ def aktualizuj_bind(*args):
         platno.bind("<B1-Motion>", guma)
         platno.bind("<ButtonRelease-1>", stop_kresleni)
 
+    elif styl == "obdelník":
+        platno.bind("<Button-1>", obdelnik_klik)
+
+    elif styl == "oval":
+        platno.bind("<Button-1>", oval_klik)
+
 vybrany_styl_podtrzeni.trace("w", aktualizuj_bind)
 aktualizuj_bind()  
 
@@ -114,4 +152,5 @@ button_smaz = tk.Button(root, text="smazat", command=smaz_platno)
 button_smaz.grid(row=0, column=3, padx=3, pady=3)
 
 root.mainloop()
+
 
